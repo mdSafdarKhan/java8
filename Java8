@@ -1,0 +1,512 @@
+Default Method	
+	◌ A default method is a method which is declared using “default” keyword and it contains a method body.
+	◌ Default method is available to all implementing classes of that interface.
+	◌ Implementing class may/may not override the default method.
+	◌ Default methods are introduced to add extra features to current interfaces without disrupting their existing implementations.
+	◌ All method declarations in an interface, including default methods, are implicitly public, so you can omit the public modifier.
+	
+Default Methods: Rules
+	◌ Default methods are public implicitly, just as any other method of an interface
+	◌ An interface can have any number of abstract and default methods
+	◌ All methods with the keyword default must have a body
+	◌ Default methods cannot be final
+	◌ Default methods cannot be synchronized.
+	◌ You cannot use Object class method as default method.
+	
+Default Method and Multiple Inheritance
+	◌ By introducing default methods it opened the gate for diamond problem where a class can inherit two methods of the same signature from two different classes.
+	
+	◌ As from Java 8 interfaces can contain concrete methods, there is the possibility of a class inheriting more than one method with the same signature.
+	
+	◌ Java 8 acknowledges this conflict with three basic principles.
+		◌ A method declaration in the class or a superclass wins the priority over any default method declared in the interface.
+		◌ The method with the same signature in the most specific default-providing interface will take the priority.
+		◌ In case choices are still ambiguous, the class inheriting from multiple interfaces has to override the default method and then it can provide its own implementation. To call the super interface method super keyword is used.
+		
+Static Methods
+	◌ Static Method
+		◌ Static methods are public implicitly, just as any other method of an interface
+		◌ Static methods in interfaces are defined just like static methods in classes, with the keyword static
+		◌ Static method cannot be overridden, and an interface can have any number of static methods
+		
+	◌ Why Static Methods?
+		◌ You know Collection and Collections.
+		◌ Collection is an interface and Collections is a utility class containing only static methods which operate on Collection objects.
+		◌ Java API developers have followed this pattern of supplying a utility class along with an interface to perform basic operations on such objects.
+		◌ But from Java 8, they have broken this pattern by introducing static methods to interfaces.
+		◌ With the introduction of static methods to interface, such utility classes will disappear and methods to perform basic operations will be kept as static methods in interface itself.
+	
+	◌ Example of Interfaces containing static methods
+		◌ Stream.of, Comparator.naturalOrder, Comparator.comparing etc	
+		
+What is functional Programming?
+	◌ Functional programming is a programming paradigm, which concentrates on computing results rather than on performing actions.
+	◌ Functional Programming is based on lambda calculus and It treats computation as the evaluation of mathematical functions and avoids changing-state and mutable data.
+	◌ Functional Programming supports parallel data processing
+	◌ Functional programming is more declarative rather than imperative.
+	◌ Declarative programming approach seeks to describe what you want to do instead of specifying how you want to do.
+		
+Example of Imperative Approach
+	◌ Let’s get clear on this : Suppose you have a list of employees and you just want to fetch the name of all those employee whose salary is greater than x amount in a imperative way?
+		
+		private List<String> filterEmployee(List<Employee> employees) {
+			List<String> names = new ArrayList<String>();
+			for(Employee emp: employees){
+				if(emp.getSal() > 30000){
+					names.add(emp.getName());
+				} 
+			}
+			return names; 
+		}
+	◌ Here, we're saying:
+	◌ Create a result collection
+	◌ Step through each Employee in the collection
+	◌ Check the salary, if it's greater than 30000, add it to the results
+	
+Example of Declarative Approach
+	◌ With declarative programming, on the other hand, you write code that describes what you want, but not necessarily how to get it (declare your desired results, but not the step-by-step):
+		
+		private List<String> filterEmp(List<Employee> employees) {
+			List<String> names = new ArrayList<String>();
+			names= employees.stream().filter(emp->emp.getSal()>30000).map(emp->emp.getName()).collect(Collectors.toList());
+			return names;
+		}
+	◌ Here, we're saying give us Employee name where Employee salary is greater than 30000 , not step through the
+	collection language will then takes care of everything else.
+	
+Functional Interface
+	◌ Functional Interface
+		◌ Any interface having exactly one abstract method inside it is called functional interface. It is also called SAM(Single Abstract Method) interface.
+		◌ Functional interfaces are useful for lambda expression because the signature of the abstract method describe the signature of a lambda expression’s parameter and return type.
+		◌ Functional interface provides target types for lambda expressions and method references.
+	
+	◌ Example
+		pubilc interface Runnable{
+			public void run();
+		}
+		
+	◌ Functional Interface Rules
+		◌ A functional interface is any interface that has exactly one abstract method.
+		◌ Functional interface can have any number default methods .
+		◌ If an interface declares an abstract method with the signature of one of the methods of java.lang.Object, it doesn’t count toward the functional interface method count.
+		◌ An empty interface is not considered a functional interface.
+		◌ A functional interface is valid even if the @FunctionalInterface annotation would be omitted.
+		
+	◌ Below Code Snippet is an Example of Functional Interface.
+		
+		@FunctionalInterface
+		public interface MyFunctionalInterface {
+			public abstract void execute();
+			
+			@Override
+			String toString();
+			
+			default void beforeTask() { Code Here }
+			default void afterTask() { Code Here }
+		}
+		
+Function Descriptor
+	◌ Function Descriptor
+		◌ The signature of the abstract method in functional interface describes the signature of the lambda expression.
+		◌ Function descriptor is used to represent this signature of lambda expression.
+	
+	◌ Let's Understand Function Descriptor With Examples
+		◌ Example1
+			◌ Function interface with method that takes no parameter and returns void
+			
+			@FunctionalInterface
+			public interface MyInterfaceOne {
+				public void abc(); // ()->void
+			}
+			
+			◌ Function Descriptor : () -> void
+			
+		◌ Example 2
+			◌ Function interface with method that takes String as a parameter and returns void
+			
+			@FunctionalInterface
+			public interface MyInterfaceTwo {
+				public void xyz(String name);
+			}
+			
+			◌ Function Descriptor : (String) -> void
+			
+		◌ Example 3
+			◌ Function interface with method that takes two long as a parameter and returns double
+			
+			@FunctionalInterface
+			public interface MyInterfaceThree {
+				public double getDouble(long value1, long value2);
+			}
+			
+			◌ Function Descriptor : (long, long) -> double
+
+What is a lambda expression?
+	◌ The term lambda expression comes from lambda calculus.
+	◌ In programming Lambda expression is an anonymous function. A function that doesn’t have a name and doesn’t belong to any class.
+	◌ A lambda expression has list of parameters, function body and returns result.
+	◌ It is used to implement a method defined by a functional interface .
+	◌ It is very useful in collection library. It helps to iterate, filter and extract data from collection.
+		
+Parts of Lambda Expression
+	◌ Basically Lambda has 3 parts.
+		◌ A list of parameters: Comes before arrow symbol
+		◌ Function body : The behavior comes after arrow
+		◌ An arrow : Separator between parameter list and function body
+	
+	◌ Syntax of Lambda Expression
+		(parameter_list) -> {function_body }
+	
+	◌ Example
+		◌ (x, y) -> x + y This lambda expression takes two arguments x and y and returns the sum of these two arguments.
+		
+	◌ The Parameters
+		◌ A lambda expression can receive zero, one or more parameters.
+		◌ The type of the parameters can be explicitly declared, or it can be inferred from the context.
+		◌ Parameters are enclosed in parentheses and separated by commas.
+		◌ Empty parentheses are used to represent an empty set of parameters.
+		◌ When there is a single parameter, its type is inferred, and it is not mandatory to use parentheses.
+		
+	E.G
+		◌ () -> System.out.println("Hi");
+		◌ (String s) -> System.out.println(s);
+		◌ (s) -> System.out.println(s); The type of the parameters can be declared explicitly, or it can be inferred from the context:
+		◌ s -> System.out.println(s); If there is a single parameter, the type is inferred, and it is not mandatory to use parentheses:
+		◌ (String s1, String s2) -> System.out.println(s1 + s2);
+		
+	◌ An arrow
+		◌ Formed by the characters - and > to separate the parameters and the body.
+		◌ A body
+		◌ The body of the lambda expressions can contain one or more statements.
+			(int a) -> a*6;
+			
+		◌ If lambda body enclosed inside curly braces, then return keyword is required in case your behavior returns value
+			(int a) -> { System.out.println(a); return a*6; }
+			
+		◌ If the lambda expression doesn’t return a result, a return statement is optional
+			() -> System.out.println("Hi");
+			() -> {
+				System.out.println("Hi");return
+			}
+			
+	◌ What is the type of a lambda expression?
+		◌ Answer: a functional interface
+
+	◌ Can a lambda be put in a variable?
+		◌ Answer is Yes!
+				Comparator<String> c= (String s1,String s21)-> Integer.compare(s1.length(),s2.length());
+		◌ Consequences : Lambda can be passed as method parameter, and can be returned by the method
+		
+Java Built-In Lambda Interfaces
+	◌ The java.util.function package contains rich set of functional interfaces used by JDK and also available for end users.
+	
+	◌ There are five of them:
+		◌ Predicate<T>
+		◌ Consumer<T>
+		◌ Function<T, R>
+		◌ Supplier<T>
+		◌ UnaryOperator<T >
+		
+Consumer Interface
+	◌ java.util.function. Consumer<T>
+	◌ A consumer is an operation that accepts a single input argument and returns no result .it just execute some operations on the argument provided to it.
+	◌ Interface Definition
+			
+			public interface Consumer<T> {
+				void accept(T t);
+			}
+			
+Predicate Interface
+	◌ java.util.function.Predicate<T>
+		◌ A predicate is a statement that may be true or false depending on certain condition.
+		◌ java.util.function.Predicate has a boolean-valued function that takes an argument and returns boolean value.
+		◌ This functional interface can be used anywhere you need to evaluate a boolean condition.
+	
+			public interface Predicate<T> {
+				boolean test(T t);
+			}
+
+	◌ Example
+		List<String> myNames=Arrays.asList("Amit","Anuj","Äbha",“Java")
+		Predicate<String> p2=t -> t.endsWith("a");
+		
+Function Interface
+	◌ Function<T, R>
+		◌ A function represents an operation that takes an input argument of a certain type and produces a result of another type.
+		◌ A common use is to convert or transform from one object to another
+	
+	◌ Interface Definition
+		public interface Function<T, R> {
+			R apply(T t);
+		}
+			
+Supplier Interface
+	◌ java.util.function. Supplier<T>
+		◌ A supplier does the opposite of a consumer, it takes no arguments and only returns some value.
+		◌ Supplier can be used in all contexts where there is no input but an output is expected.
+		◌ Since Supplier is a functional interface, hence it can be used as the assignment target for a lambda expression or a method reference.
+	
+	◌ Interface Définition
+		@FunctionalInterface
+		public interface Supplier<T> {
+			T get();
+		}		
+
+	◌ Advantage of predefined Supplier Interface:
+		◌ In all scenarios where there is no input to an operation, and it is expected to return an output the in-built functional interface
+		Supplier<T> can be used without the need to define a new functional interface every time.
+		
+Method reference
+	◌ Method Reference
+		◌ Method reference is used to refer method of functional interface. It represent instance of a functional interface.
+		◌ A method reference is a simplified form (or short-hand) of a lambda expression that executes just one method.
+		◌ Instead of using an anonymous class you can use a Lambda expression and if this just calls one method, you can use a method reference
+		◌ Method references can refer to both static and instance methods of class, and it will enhance the readability of your code.
+		
+	◌ Syntax of Method Reference
+		◌ CLASS OR INSTANCE THAT CONTAINS THE METHOD :: METHOD NAME TO EXECUTE
+		◌ :: Double colon is method reference operator
+		
+	◌ Method Reference Example
+		◌ Integer::parseInt is a method reference with the following charecteristics –
+	
+	◌ It is equivalent to the lambda –
+	
+	◌ (String str, Integer integer)->Integer.parseInt(str)
+		◌ It can can be assigned to a functional interface Function<T ,R> like this –
+	
+	◌ Function<String,integer> intParser=Integer::parseInt
+		
+	◌ Above assignment is equivalent to the assignment of lambda expression of parseInt() –
+		◌ Function<String,Integer> intParser = (String str,Integer integer)->Integer.parseInt(str)
+	
+	◌ Thus, instead of the longer lambda expression, just its concise method reference can be assigned to a functional interface instance.
+	
+	◌ Types Of Method Reference
+		◌ Reference to a static method of class.
+		◌ Reference to an instance method of class.
+		◌ Method reference to instance method of non-existing object
+		◌ Reference to a constructor of a class.
+		
+	◌ Method reference to static method :
+		◌ ClassName::MethodName
+		◌ Use this syntax when you are referring to a static method.
+		
+		◌ Example:
+			◌ Integer::parseInt, Math::max
+			
+	◌ Method reference to instance method of an existing object :
+		◌ ReferenceVariable::MethodName
+		◌ Use this syntax when you are referring to an instance method of already existing object.
+		
+		◌ Example :
+			◌ e::getName
+			◌ here ‘e’ is a reference variable referring to Employee object which already exist.
+
+	◌ Method reference to instance method of non-existing object :
+		◌ ClassName::MethodName
+		◌ Use this syntax when you are referring to an instance method by passing reference variables as an argument.
+		
+		◌ Example :
+			◌ (Employee e) -> e.getName() can be written as Employee::getName
+			
+	◌ Constructor References
+		◌ You can also refer to the constructor of a class same as method references.
+		◌ Syntax for referring to constructor is, ClassName::new
+	
+		◌ Example :
+			◌ Employee::new
+			
+What Is a Stream?
+	◌ java.util.stream.Stream Interface
+		◌ Stream is a sequence of elements from a source. Source can be anything like collections, arrays, or I/O resources etc.
+		◌ It provides a set of elements of specific type in a sequential manner. A stream gets/computes elements on demand. It never stores the elements.
+		◌ It supports operations like filter, map, limit, reduce, find, match, and so on.
+		◌ It allows pipelining because most of the stream operations return stream itself so that their result can be pipelined.
+		◌ It is designed for lambdas and do not support indexed access
+	
+	◌ What does it do?
+		◌ It provides a way to efficiently process large amounts of data
+		
+Collections VS Streams
+	◌ Collections are mainly used to store and group the data In ArrayList , LinkedList etc .
+	◌ Streams are mainly used to perform operations on data.
+	◌ You can add or remove elements from collections. You can’t add or remove elements from streams.
+	◌ Streams are traversable only once. If you traverse the stream once, it is said to be consumed.
+	◌ To traverse it again, you have to get new stream from the source again. Collection can be traversed multiple times.
+	
+How Can we build a Stream?
+	◌ From a Collection using the stream() method;
+			Stream<Integer> stream = list.stream();
+			stream.forEach(p -> System.out.println(p));
+	
+	◌ Using Stream.of(T[]) Static Factory Method
+			Stream<Integer> stream = Stream.of( new Integer[]{1,2,3,4,5,6,7,8,9} );
+			stream.forEach(p -> System.out.println(p));
+
+Stream Operations
+		◌ Stream Operations
+			◌ Stream operations are broadly divided into intermediate and terminal operations that are combined to form pipeline of tasks.
+			◌ A stream pipeline consists of a source (such as a Collection, an array, or an I/O channel); followed by zero or more intermediate operations such as Stream.filter or Stream.map; and a terminal operation such as Stream.forEach or Stream.reduce.
+			
+		◌ What is Intermediate operation?
+			◌ An intermediate operation returns stream back again. Which allows you to chain multiple method calls in a row.
+			◌ Intermediate operation don’t modify the original stream, everytime they return a new stream.
+		
+		◌ Example of Intermediate operation
+			◌ filter(),map()etc.
+			
+		◌ What is Terminal Operation?
+			◌ Terminal operation traverse the stream and execute the pipeline of intermediate operations to produce the result of certain type.
+			◌ After the terminal operation is performed, the stream pipeline is considered as consumed, and can no longer be used.
+			◌ A stream implementation may throw IllegalStateException if it detects that the stream is being reused.
+		
+		◌ Example Terminal Operation
+			◌ forEach() ,
+			◌ collect() etc.
+			
+Stream API	
+	◌ Provides various methods that let you deal with complex data processing queries such as filtering, slicing, mapping, finding, matching and reducing.
+	
+	◌ Consuming Stream
+		◌ Stream provides forEach method which accepts a Consumer as argument and performs the action on each element.
+		◌ void forEach(Consumer<? super T> action)
+		◌ The forEach is the terminal operation and returns void.
+		
+	◌ Filtering
+		◌ Stream interface provides a method filter which accepts a Predicate as argument and return a stream that matches the given predicate.
+		◌ The predicate will be applied to each element to determine if it should be included to new stream.
+		◌ you can pass lambda expression to this method as filtering logic.
+		
+		memberNames.stream().filter((s) -> s.startsWith("A")).forEach(System.out::println);
+		
+	◌ Mapping
+		◌ Stream provides map method which accepts a Function as argument and returns a new stream consisting of the results of applying the given function/transformation to the elements of this stream.
+		◌ It allows you to transform your data you can supply your transformation logic to map() method as lambda expression and it will transform each element of that collection and return a new stream.
+
+		memberNames.stream().filter((s) -> s.startsWith("A")).map(String::toUpperCase).forEach(System.out::println);
+	
+	◌ Reductions
+		◌ Reductions are terminal operation which refers to the process of combining all elements in the stream repeatedly to produce a single value which is returned as the result of the reduction operation.
+		◌ They trigger the processing of data ;They are always present at the end of a chain of Stream methods.
+		◌ Stream classes like IntStream has built-in methods like average(), count(), sum() to perform reduce operations and mapToLong(), mapToDouble() methods for transformations.
+		
+		◌ Method Signature
+			◌ T reduce(T identity, BinaryOperator<T> accumulator)
+	
+	◌ How Reduction works?
+		List<Integer> numbers = Arrays.asList(20,30,50);
+		Integer sum = numbers.stream().reduce(0,(num1,num2) -> num1+num2);
+		System.out.println("Sum is " + sum);
+		
+	◌ 1st argument :
+		◌ The identity is the initial value of the type T which will be used as the first value in the reduction operation
+		
+	◌ 2nd argument: Reduction operation of, type BinaryOpertor<T>
+	
+	◌ A BinaryOperator is a special case of Bifunction.
+		◌ It represents a binary operator which takes two operands and operates on them to produce a result
+		◌ T: denotes the type of the input arguments and the return value of the operation
+	
+	Identity Element
+		◌ What happens if the Stream is empty ?
+			◌ The reduction of an empty Stream is the Identity element
+		
+		◌ What happens if the Stream has only one element?
+			◌ If the Stream has only one element, then the reduction is that element
+		
+		◌ What happens if the Stream has multiple elements?
+			◌ If the Stream has multiple elements, then the reduction is of all that elements
+
+	◌ Built-In Reduction Method
+		◌ min()
+		◌ max()
+		◌ Count()
+		◌ Sum()
+		
+	◌ Boolean Reduction
+		◌ allMatch(), noMatch() , anyMatch()
+
+	◌ Reductions that return an optional
+		◌ findFirst() , findAny()
+		
+	◌ Matching
+		◌ Many-a-times you need to check whether object(s) in the given stream match a specific criteria. Instead of writing logic for iterating over the stream elements and checking each object whether it matches the criteria you can use methods provided by Stream API.
+		◌ Stream API provides anyMatch, allMatch and noneMatch terminal operations which takes a Predicate as argument and returns a boolean result by applying the Predicate to the elements of the stream.
+		◌ Predicate might not be applied to all the elements if further execution is not required.
+	
+	◌ anyMatch:
+		◌ Returns true if any element found matching with the predicate. Predicate will not be applied to other elements if any matching found.
+	
+	◌ allMatch:
+		◌ Returns true if all elements are matching to the given predicate.
+	
+	◌ noneMatch:
+		◌ Returns true if none of the elements are matching to the predicate.
+	
+	◌ Finding element
+		◌ findFirst()
+			◌ Returns first element of a stream wrapped in an Optional object.
+	
+		◌ findAny()
+			◌ Randomly returns any one element in a stream. The result of this operation is unpredictable. It may select any element in a stream.
+	
+	◌ Counting Element
+		◌ count()
+			◌ Returns number of elements in stream as a long.
+					long total= memberNames.stream().filter((s) -> s.startsWith("A")) .count();
+					System.out.println(total);
+
+Collectors
+	◌ Collector
+		◌ Collector is nothing but a mutable reduction operation that accumulates elements from the stream into a mutable container like ArrayList , HashSet and Map etc.
+		◌ Stream interface contains a most frequently used terminal operation collect that performs the reduction operation on the elements of the stream using Collectors.
+		
+	◌ Predefined Collectors
+		◌ java.util.stream.Collectors class containing many factory methods that provides most commonly used Collector implementations.
+	
+	◌ Some of the functionality offered by Collectors.
+		◌ Collecting elements to a java.util.Collection
+		◌ Joining String elements to a single String
+		◌ Grouping elements by custom grouping key
+		
+	◌ Collecting as Collections
+		◌ Collecting stream elements to a java.util.Collection is the most widely used operation.
+		◌ Collectors class provide various methods that returns a collector which will then collect stream elements to a specific collection container.
+		
+		◌ toList():
+			◌ Returns a Collector that will accumulate stream elements into ArrayList in the encountered order.
+		
+		◌ toSet():
+			◌ Returns a Collector that will accumulate stream elements into HashSet object.
+		
+		◌ toMap(Function<T, K> keyMapper, Function<T, U> valueMapper):
+			◌ Returns a Collector that accumulates elements into a Map whose keys are derived from keyMapper function and values are from valueMapper function.
+
+		◌ Collecting in a List
+			
+			List<Person> persons = new ArrayList<>();
+			List<String> result= persons.stream().filter(person->person.getAge()>20).map(Person::getLastName).collect(Collectors.toList());
+			
+			◌ Result is List of String with all the name s of people in the persons, older than 20
+			
+		◌ Collecting in Map
+			
+			List<Employee> list = new ArrayList<>();
+			Map<Integer, String> map = list.stream().collect(Collectors.toMap(Employee::getId, Employee::getName));
+			
+			map.forEach((x, y) -> System.out.println("Key: " + x +", value: "+ y));
+			
+			◌ The result is Map containing the employee id and name
+				◌ The keys are the id of the Employee
+				◌ The values are the name of the Employee
+				
+		◌ Collecting in String
+			◌ Collectors utility class provides some of overloaded methods that concatenates stream elements into a single string either by separating them with a delimiter if provided.
+		
+		◌ Example
+			
+			List<Person> persons = new ArrayList<>();
+			String result= persons.stream().filter(person->person.getAge()>20).map(Person::getLastName).collect(Collectors.joining(","));
+		
+			◌ Result is List of String with all the names of people in the persons, older than 20
