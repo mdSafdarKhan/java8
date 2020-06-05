@@ -510,3 +510,15 @@ Collectors
 			String result= persons.stream().filter(person->person.getAge()>20).map(Person::getLastName).collect(Collectors.joining(","));
 		
 			◌ Result is List of String with all the names of people in the persons, older than 20
+			
+Parallel streams
+	• Streams and Lambda expressions are maybe the two most important new features of the Java 8 version. A special kind of stream is a parallel stream which realizes its operations in a parallel way. 
+	
+	• The most important elements involved in the use of parallel streams are:
+		• The Stream interface: This is an interface that defines all the operations that you can perform on a stream.
+		
+		• Optional: This is a container object that may or may not contain a non-null value.
+		
+		• Collectors: This is a class that implements reduction operations that can be used as part of a stream sequence of operations.
+		
+		• Lambda expressions: Streams has been thought to work with Lambda expressions. Most stream methods accept a lambda expression as a parameter. This allows you to implement a more compact version of the operations.
